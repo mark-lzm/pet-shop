@@ -1,8 +1,10 @@
 package com.litchi.petshop.service.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +16,6 @@ import com.litchi.petshop.service.entity.ServiceEntity;
 import com.litchi.petshop.service.service.ServiceService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.common.utils.R;
-
 
 
 /**
@@ -30,12 +31,20 @@ public class ServiceController {
     @Autowired
     private ServiceService serviceService;
 
+    @RequestMapping("/member/{memberId}")
+    public R memberService(@PathVariable Integer memberId) {
+        List<ServiceEntity> services = serviceService.list(new QueryWrapper<ServiceEntity>().eq("member_id", memberId));
+//        ServiceEntity service = new ServiceEntity();
+//        service.setMemberId(66);
+        return R.ok().put("services", services);
+    }
+
     /**
      * 列表
      */
     @RequestMapping("/list")
     //@RequiresPermissions("service:service:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = serviceService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -47,8 +56,8 @@ public class ServiceController {
      */
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("service:service:info")
-    public R info(@PathVariable("id") Integer id){
-		ServiceEntity service = serviceService.getById(id);
+    public R info(@PathVariable("id") Integer id) {
+        ServiceEntity service = serviceService.getById(id);
 
         return R.ok().put("service", service);
     }
@@ -58,8 +67,8 @@ public class ServiceController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("service:service:save")
-    public R save(@RequestBody ServiceEntity service){
-		serviceService.save(service);
+    public R save(@RequestBody ServiceEntity service) {
+        serviceService.save(service);
 
         return R.ok();
     }
@@ -69,8 +78,8 @@ public class ServiceController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("service:service:update")
-    public R update(@RequestBody ServiceEntity service){
-		serviceService.updateById(service);
+    public R update(@RequestBody ServiceEntity service) {
+        serviceService.updateById(service);
 
         return R.ok();
     }
@@ -80,8 +89,8 @@ public class ServiceController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("service:service:delete")
-    public R delete(@RequestBody Integer[] ids){
-		serviceService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Integer[] ids) {
+        serviceService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

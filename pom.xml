@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.litchi</groupId>
+    <artifactId>pet-shop</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <modules>
+        <module>pet-shop-common</module>
+        <module>pet-shop-gateway</module>
+        <module>pet-shop-auth-server</module>
+        <module>pet-shop-admin</module>
+        <module>pet-shop-member</module>
+        <module>pet-shop-pet</module>
+        <module>pet-shop-service</module>
+        <module>pet-shop-foster</module>
+        <module>renren-fast</module>
+    </modules>
+    <name>pet-shop</name>
+    <description>pet-shop</description>
+
+    <packaging>pom</packaging>
+
+</project>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.service.dao.ServiceDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.service.entity.ServiceDetailEntity" id="serviceDetailMap">
+        <result property="serviceDetailId" column="service_detail_id"/>
+        <result property="serviceId" column="service_id"/>
+        <result property="petId" column="pet_id"/>
+        <result property="serviceItemSubId" column="service_item_sub_id"/>
+        <result property="serviceDiscountPrice" column="service_discount_price"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="serviceStartTime" column="service_start_time"/>
+        <result property="serviceEndTime" column="service_end_time"/>
+        <result property="remarks" column="remarks"/>
+        <result property="serviceEndTag" column="service_end_tag"/>
+    </resultMap>
+
+
+</mapper>

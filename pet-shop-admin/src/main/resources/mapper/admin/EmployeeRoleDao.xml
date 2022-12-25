@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.admin.dao.EmployeeRoleDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.admin.entity.EmployeeRoleEntity" id="employeeRoleMap">
+        <result property="roleId" column="role_id"/>
+        <result property="employeeId" column="employee_id"/>
+        <result property="productInfoSetting" column="product_info_setting"/>
+        <result property="memberInfoSetting" column="member_info_setting"/>
+        <result property="petServiceItemSetting" column="pet_service_item_setting"/>
+        <result property="fosterStandardSetting" column="foster_standard_setting"/>
+        <result property="statisticalAnalysis" column="statistical_analysis"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.product.dao.ProductSaleDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.product.entity.ProductSaleDetailEntity" id="productSaleDetailMap">
+        <result property="saleDetailId" column="sale_detail_id"/>
+        <result property="saleId" column="sale_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="discountedPrice" column="discounted_price"/>
+        <result property="amount" column="amount"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+
+</mapper>

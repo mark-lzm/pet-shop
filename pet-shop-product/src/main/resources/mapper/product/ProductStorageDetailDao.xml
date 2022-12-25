@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.product.dao.ProductStorageDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.product.entity.ProductStorageDetailEntity" id="productStorageDetailMap">
+        <result property="storageDetailId" column="storage_detail_id"/>
+        <result property="storageId" column="storage_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="storageUnitPrice" column="storage_unit_price"/>
+        <result property="storageAmount" column="storage_amount"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+
+</mapper>

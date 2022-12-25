@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.admin.dao.AdminDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.admin.entity.AdminEntity" id="adminMap">
+        <result property="adminId" column="admin_id"/>
+        <result property="adminName" column="admin_name"/>
+        <result property="adminPassword" column="admin_password"/>
+        <result property="availableTag" column="available_tag"/>
+    </resultMap>
+
+
+</mapper>

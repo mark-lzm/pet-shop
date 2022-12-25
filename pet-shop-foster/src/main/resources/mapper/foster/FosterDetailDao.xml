@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.foster.dao.FosterDetailDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.foster.entity.FosterDetailEntity" id="fosterDetailMap">
+        <result property="fosterDetailId" column="foster_detail_id"/>
+        <result property="fosterId" column="foster_id"/>
+        <result property="petName" column="pet_name"/>
+        <result property="petBreedId" column="pet_breed_id"/>
+        <result property="petSex" column="pet_sex"/>
+        <result property="petWeight" column="pet_weight"/>
+        <result property="petCoatColorId" column="pet_coat_color_id"/>
+        <result property="fosterStandardId" column="foster_standard_id"/>
+        <result property="fosterCreateTime" column="foster_create_time"/>
+        <result property="fosterPlanTime" column="foster_plan_time"/>
+        <result property="fosterEndTime" column="foster_end_time"/>
+        <result property="cashPledge" column="cash_pledge"/>
+        <result property="amountReceived" column="amount_received"/>
+        <result property="fosterStatus" column="foster_status"/>
+    </resultMap>
+
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.litchi.petshop.member.dao.MemberDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.litchi.petshop.member.entity.MemberEntity" id="memberMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="sex" column="sex"/>
+        <result property="availablePoints" column="available_points"/>
+        <result property="points" column="points"/>
+        <result property="gradeId" column="grade_id"/>
+        <result property="balance" column="balance"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+
+</mapper>

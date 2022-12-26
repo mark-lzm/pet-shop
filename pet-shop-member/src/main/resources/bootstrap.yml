@@ -1,0 +1,20 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: petshop-member
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 43.139.126.45:8848
+      config:
+        server-addr: 43.139.126.45:8848
+        namespace: 7d75cce8-e3bc-4150-9c57-a402efee51e1
+        ext-config[0]:
+          dataId: datasource.yaml
+          group: dev
+          refresh: true
+        ext-config[1]:
+          dataId: mybatis-plus.yaml
+          group: dev
+          refresh: true

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.litchi.petshop.member.feign.ServiceFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import com.litchi.common.utils.R;
  * @email lizhiming596@126.com
  * @date 2022-12-25 10:51:15
  */
+@RefreshScope
 @RestController
 @RequestMapping("member/member")
 public class MemberController {
@@ -30,6 +33,16 @@ public class MemberController {
 
     @Autowired
     ServiceFeignService serviceFeignService;
+
+    @Value("${member.user.name}")
+    private String name;
+    @Value("${member.user.age}")
+    private String age;
+
+    @RequestMapping("/test")
+    public R test1() {
+        return R.ok().put("name", name).put("age", age);
+    }
 
     @RequestMapping("/service")
     public R test() {

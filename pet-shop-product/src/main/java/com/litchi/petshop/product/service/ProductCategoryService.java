@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.petshop.product.entity.ProductCategoryEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +17,7 @@ import java.util.Map;
 public interface ProductCategoryService extends IService<ProductCategoryEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void removeMenuByIds(List<Integer> asList);
 }
 

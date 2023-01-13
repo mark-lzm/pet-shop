@@ -41,6 +41,17 @@ public class ProductController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 列表
+     */
+    @RequestMapping("/listAndCategory")
+    //@RequiresPermissions("product:product:list")
+    public R listForCategory(@RequestParam Map<String, Object> params){
+        PageUtils page = productService.queryPageAndCategory(params);
+
+        return R.ok().put("page", page);
+    }
+
 
     /**
      * 信息

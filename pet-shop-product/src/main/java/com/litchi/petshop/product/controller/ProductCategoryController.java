@@ -42,6 +42,7 @@ public class ProductCategoryController {
     }
 
 
+
     /**
      * 信息
      */
@@ -81,7 +82,9 @@ public class ProductCategoryController {
     @RequestMapping("/delete")
     //@RequiresPermissions("product:productcategory:delete")
     public R delete(@RequestBody Integer[] catIds){
-		productCategoryService.removeByIds(Arrays.asList(catIds));
+        //1.检查当前要删除的菜单，是否被其他地方引用
+//		productCategoryService.removeByIds(Arrays.asList(catIds));
+		productCategoryService.removeMenuByIds(Arrays.asList(catIds));
 
         return R.ok();
     }

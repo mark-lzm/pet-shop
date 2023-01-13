@@ -1,6 +1,8 @@
 package com.litchi.petshop.product.service.impl;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -24,6 +26,14 @@ public class ProductCategoryServiceImpl extends ServiceImpl<ProductCategoryDao, 
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void removeMenuByIds(List<Integer> asList) {
+
+        //TODO 1、检查当前要删除的菜单，是否被其他地方引用
+
+        baseMapper.deleteBatchIds(asList);
     }
 
 }

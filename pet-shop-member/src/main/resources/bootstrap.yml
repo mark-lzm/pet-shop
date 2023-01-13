@@ -9,7 +9,7 @@ spring:
         server-addr: 43.139.126.45:8848
       config:
         server-addr: 43.139.126.45:8848
-        namespace: 7d75cce8-e3bc-4150-9c57-a402efee51e1
+        namespace: 6f1ef946-d43f-431d-a6ec-52ed1405e5b4
         ext-config[0]:
           dataId: datasource.yaml
           group: dev

@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: petshop-product
+  cloud:
+    nacos:
+      config:
+        server-addr: 43.139.126.45:8848
+        namespace: 77bdd52d-470f-4da5-911e-ba817d408c1c

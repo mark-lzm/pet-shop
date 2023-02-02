@@ -75,6 +75,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, ProductEntity> i
         // 分页查询
         Page<ProductForCategoryVo> page = new Page<>(pageIndex, limit);
         int totalSize = productForCategoryVoList.size();
+        // 若找不到数据，直接返回page
+        if (totalSize == 0) {
+            return new PageUtils(page);
+        }
         int startIndex = (pageIndex - 1) * limit;
         int endIndex = pageIndex * limit;
         //总页数

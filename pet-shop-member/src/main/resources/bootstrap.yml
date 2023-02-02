@@ -10,11 +10,11 @@ spring:
       config:
         server-addr: 43.139.126.45:8848
         namespace: 6f1ef946-d43f-431d-a6ec-52ed1405e5b4
-        ext-config[0]:
-          dataId: datasource.yaml
-          group: dev
-          refresh: true
-        ext-config[1]:
-          dataId: mybatis-plus.yaml
-          group: dev
-          refresh: true
+#        ext-config[0]:
+#          dataId: datasource.yaml
+#          group: dev
+#          refresh: true
+#        ext-config[1]:
+#          dataId: mybatis-plus.yaml
+#          group: dev
+#          refresh: true

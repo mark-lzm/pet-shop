@@ -65,6 +65,14 @@ public class MemberController {
     }
 
 
+    @RequestMapping("/listAndGrade")
+    //@RequiresPermissions("member:member:list")
+    public R listAndGrade(@RequestParam Map<String, Object> params) {
+        PageUtils page = memberService.queryPageAndGrade(params);
+
+        return R.ok().put("page", page);
+    }
+
     /**
      * 信息
      */

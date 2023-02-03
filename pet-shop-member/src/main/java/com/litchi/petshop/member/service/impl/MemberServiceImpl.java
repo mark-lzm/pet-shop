@@ -1,6 +1,7 @@
 package com.litchi.petshop.member.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.litchi.common.utils.PetPageUtils;
 import com.litchi.petshop.member.dao.MemberGradeDao;
 import com.litchi.petshop.member.entity.MemberGradeEntity;
 import com.litchi.petshop.member.vo.MemberAndGradeVo;
@@ -76,29 +77,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             memberAndGradeVoList.add(vo);
         }
 
-        Page<MemberAndGradeVo> page = new Page<>(pageIndex, limit);
-        int totalSize = memberAndGradeVoList.size();
-        // 若找不到数据，直接返回page
-        if (totalSize == 0) {
-            return new PageUtils(page);
-        }
-        int startIndex = (pageIndex - 1) * limit;
-        int endIndex = pageIndex * limit;
-        //总页数
-        int pageCount = 0;
-        //通过 % 判断是否给总页数加1
-        int num = totalSize % limit;
-        pageCount = num == 0 ? totalSize / limit : totalSize / limit + 1;
-        //如果当前页是最后一页的话 要包含集合的最后一条数据，因为sublist方法本身结束的下标是不包含当前元素的
-        if (pageIndex == pageCount) {
-            endIndex = totalSize;
-        }
-
-        List<MemberAndGradeVo> memberAndGradeVoSubList = memberAndGradeVoList.subList(startIndex, endIndex);
-        page.setRecords(memberAndGradeVoSubList);
-        page.setTotal(totalSize);
-
-        return new PageUtils(page);
+        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
     }
 
 }

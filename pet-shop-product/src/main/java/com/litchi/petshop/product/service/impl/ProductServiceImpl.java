@@ -2,6 +2,7 @@ package com.litchi.petshop.product.service.impl;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.litchi.common.utils.PetPageUtils;
 import com.litchi.petshop.product.dao.ProductCategoryDao;
 import com.litchi.petshop.product.entity.ProductCategoryEntity;
 import com.litchi.petshop.product.vo.ProductForCategoryVo;
@@ -71,30 +72,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, ProductEntity> i
 
             productForCategoryVoList.add(productForCategoryVo);
         }
-
-        // 分页查询
-        Page<ProductForCategoryVo> page = new Page<>(pageIndex, limit);
-        int totalSize = productForCategoryVoList.size();
-        // 若找不到数据，直接返回page
-        if (totalSize == 0) {
-            return new PageUtils(page);
-        }
-        int startIndex = (pageIndex - 1) * limit;
-        int endIndex = pageIndex * limit;
-        //总页数
-        int pageCount = 0;
-        //通过 % 判断是否给总页数加1
-        int num = totalSize % limit;
-        pageCount = num == 0 ? totalSize / limit : totalSize / limit + 1;
-        //如果当前页是最后一页的话 要包含集合的最后一条数据，因为sublist方法本身结束的下标是不包含当前元素的
-        if (pageIndex == pageCount) {
-            endIndex = totalSize;
-        }
-        List<ProductForCategoryVo> productForCategoryVoSubList = productForCategoryVoList.subList(startIndex, endIndex);
-
-        page.setRecords(productForCategoryVoSubList);
-        page.setTotal(totalSize);
-        return new PageUtils(page);
+        return PetPageUtils.getPageUtils(pageIndex, limit, productEntities);
     }
 
 }

@@ -1,6 +1,11 @@
 package com.litchi.petshop.pet.service.impl;
 
+import com.litchi.common.utils.PetPageUtils;
+import com.litchi.petshop.pet.entity.PetEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,12 +23,21 @@ public class PetBreedServiceImpl extends ServiceImpl<PetBreedDao, PetBreedEntity
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<PetBreedEntity> page = this.page(
-                new Query<PetBreedEntity>().getPage(params),
-                new QueryWrapper<PetBreedEntity>()
-        );
+        String key = (String) params.get("key");
+        Integer pageIndex = Integer.parseInt((String) params.get("page"));
+        Integer limit = Integer.parseInt((String) params.get("limit"));
 
-        return new PageUtils(page);
+        QueryWrapper<PetBreedEntity> wrapper = new QueryWrapper<>();
+        //key检索
+        if (!StringUtils.isEmpty(key)) {
+            wrapper.and((obj) -> {
+                obj.eq("breed_id", key).or().like("breed_name", key);
+            });
+        }
+
+        List<PetBreedEntity> entities = this.list(wrapper);
+
+        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
     }
 
 }

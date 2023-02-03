@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 由于一个顾客可以寄养多只宠物，不同的宠物及不同的服务价格，必须通过详情表来体现。
@@ -55,14 +58,17 @@ public class FosterDetailEntity implements Serializable {
 	/**
 	 * 寄养开始时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date fosterCreateTime;
 	/**
 	 * 计划领走时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date fosterPlanTime;
 	/**
 	 * 实际领走时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date fosterEndTime;
 	/**
 	 * 预交押金

@@ -8,11 +8,11 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 用于记录员工的操作权限
- * 
+ *
+ *
  * @author mark
  * @email lizhiming596@126.com
- * @date 2022-12-25 10:49:36
+ * @date 2023-02-03 09:49:19
  */
 @Data
 @TableName("sys_employee_role")
@@ -29,24 +29,24 @@ public class EmployeeRoleEntity implements Serializable {
 	 */
 	private Integer employeeId;
 	/**
-	 * 商品信息设置
+	 * 商品信息设置，1为有权限，0为无权限
 	 */
-	private String productInfoSetting;
+	private Integer productInfoSetting;
 	/**
-	 * 员工信息设置
+	 * 会员信息设置，1为有权限，0为无权限
 	 */
-	private String memberInfoSetting;
+	private Integer memberInfoSetting;
 	/**
-	 * 宠物服务项目设置
+	 * 宠物服务项目设置，1为有权限，0为无权限
 	 */
-	private String petServiceItemSetting;
+	private Integer petServiceItemSetting;
 	/**
-	 * 寄养标准设置
+	 * 寄养标准设置，1为有权限，0为无权限
 	 */
-	private String fosterStandardSetting;
+	private Integer fosterStandardSetting;
 	/**
-	 * 统计分析
+	 * 统计分析，1为有权限，0为无权限
 	 */
-	private String statisticalAnalysis;
+	private Integer statisticalAnalysis;
 
 }

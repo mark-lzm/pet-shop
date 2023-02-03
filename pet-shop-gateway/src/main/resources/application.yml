@@ -25,6 +25,34 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>.*),/$\{segment}
 
+        - id: empolyee_route
+          uri: lb://petshop-admin
+          predicates:
+            - Path=/api/admin/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: pet_route
+          uri: lb://petshop-pet
+          predicates:
+            - Path=/api/pet/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: foster_route
+          uri: lb://petshop-foster
+          predicates:
+            - Path=/api/foster/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
+        - id: service_route
+          uri: lb://petshop-service
+          predicates:
+            - Path=/api/service/**
+          filters:
+            - RewritePath=/api/(?<segment>.*),/$\{segment}
+
         - id: admin_route
           uri: lb://renren-fast
           predicates:

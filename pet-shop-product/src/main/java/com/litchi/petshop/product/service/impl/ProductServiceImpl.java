@@ -72,7 +72,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, ProductEntity> i
 
             productForCategoryVoList.add(productForCategoryVo);
         }
-        return PetPageUtils.getPageUtils(pageIndex, limit, productEntities);
+        return PetPageUtils.getPageUtils(pageIndex, limit, productForCategoryVoList);
     }
 
 }

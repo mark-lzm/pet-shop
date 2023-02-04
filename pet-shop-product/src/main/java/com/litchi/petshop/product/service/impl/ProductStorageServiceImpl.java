@@ -1,6 +1,11 @@
 package com.litchi.petshop.product.service.impl;
 
+import com.litchi.common.utils.PetPageUtils;
+import com.litchi.petshop.product.entity.ProductSaleEntity;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -18,12 +23,21 @@ public class ProductStorageServiceImpl extends ServiceImpl<ProductStorageDao, Pr
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        IPage<ProductStorageEntity> page = this.page(
-                new Query<ProductStorageEntity>().getPage(params),
-                new QueryWrapper<ProductStorageEntity>()
-        );
+        String key = (String) params.get("key");
+        Integer pageIndex = Integer.parseInt((String) params.get("page"));
+        Integer limit = Integer.parseInt((String) params.get("limit"));
 
-        return new PageUtils(page);
+        QueryWrapper<ProductStorageEntity> wrapper = new QueryWrapper<>();
+        //key检索
+        if (!StringUtils.isEmpty(key)) {
+            wrapper.and((obj) -> {
+                obj.eq("id", key);
+            });
+        }
+
+        List<ProductStorageEntity> entities = this.list(wrapper);
+
+        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
     }
 
 }

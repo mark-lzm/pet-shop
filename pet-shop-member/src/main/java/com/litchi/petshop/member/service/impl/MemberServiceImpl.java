@@ -77,7 +77,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             memberAndGradeVoList.add(vo);
         }
 
-        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        return PetPageUtils.getPageUtils(pageIndex, limit, memberAndGradeVoList);
     }
 
 }

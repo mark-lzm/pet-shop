@@ -18,6 +18,8 @@ import com.litchi.petshop.member.service.MemberService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.common.utils.R;
 
+import javax.validation.Valid;
+
 
 /**
  * @author mark
@@ -89,7 +91,7 @@ public class MemberController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("member:member:save")
-    public R save(@RequestBody MemberEntity member) {
+    public R save(@RequestBody @Valid MemberEntity member) {
         memberService.save(member);
 
         return R.ok();

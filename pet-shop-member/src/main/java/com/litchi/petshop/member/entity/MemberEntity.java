@@ -65,7 +65,7 @@ public class MemberEntity implements Serializable {
     /**
      * 会员等级编号
      */
-    @NotNull(message = "会员等级编号不能为空")
+//    @NotNull(message = "会员等级编号不能为空")
     private Integer gradeId;
     /**
      * 会员余额

@@ -1,18 +1,18 @@
 package com.litchi.petshop.member.service.impl;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.litchi.common.utils.PetPageUtils;
+import com.litchi.petshop.member.bo.MemberBalanceBo;
 import com.litchi.petshop.member.dao.MemberGradeDao;
 import com.litchi.petshop.member.entity.MemberGradeEntity;
+import com.litchi.petshop.member.service.MemberGradeService;
 import com.litchi.petshop.member.vo.MemberAndGradeVo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -30,6 +30,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     @Autowired
     MemberGradeDao memberGradeDao;
+
+    @Autowired
+    MemberGradeService memberGradeService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -78,6 +81,77 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         }
 
         return PetPageUtils.getPageUtils(pageIndex, limit, memberAndGradeVoList);
+    }
+
+    /**
+     * 保存并且设置会员等级
+     * @param member
+     */
+    @Override
+    public void saveAndGrade(MemberEntity member) {
+        int balance = member.getBalance().intValue();
+        member.setPoints(balance);
+        member.setAvailablePoints(balance);
+
+        //根据积分设置会员等级
+        updateGradeIdByPoints(member);
+
+        this.save(member);
+    }
+
+    /**
+     * 根据积分设置会员等级
+     * @param member
+     */
+    @Override
+    public void updateGradeIdByPoints(MemberEntity member) {
+        //根据积分设置会员等级
+        List<MemberGradeEntity> memberGradeEntities = memberGradeService.list();
+
+        //根据gradePointValue进行排序，获取小于member的point值的MemberGradeEntity对象集合
+        List<MemberGradeEntity> collect = memberGradeEntities.stream()
+                .sorted(Comparator.comparing(MemberGradeEntity::getGradePointValue))
+                .filter(memberGradeEntity ->
+                        memberGradeEntity.getGradePointValue() <= member.getPoints()
+                ).collect(Collectors.toList());
+        //利用skip获取集合中最后一个
+        Optional<MemberGradeEntity> memberGradeEntity = collect.stream().skip(collect.size() - 1).collect(Collectors.toList()).stream().findFirst();
+        member.setGradeId(memberGradeEntity.get().getGradeId());
+    }
+
+
+    /**
+     * 充值
+     * @param bo
+     */
+    @Override
+    public void charge(MemberBalanceBo bo) {
+        //根据id获取member
+        MemberEntity member = this.getById(bo.getId());
+        //充值
+        double balance = bo.getChargeValue() + member.getBalance();
+        member.setBalance(balance);
+
+        //积分更改
+        member.setPoints(bo.getChargeValue() + member.getPoints());
+        member.setAvailablePoints(bo.getChargeValue() + member.getAvailablePoints());
+
+        //根据积分设置会员等级
+        updateGradeIdByPoints(member);
+
+        this.updateById(member);
+    }
+
+    /**
+     * 修改会员等级所需积分值，需要重新将会员信息的等级重新设置
+     */
+    @Override
+    public void updateMemberGradeId() {
+        List<MemberEntity> list = this.list();
+        for (MemberEntity member : list) {
+            this.updateGradeIdByPoints(member);
+            this.updateById(member);
+        }
     }
 
 }

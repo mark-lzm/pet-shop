@@ -1,9 +1,15 @@
 package com.litchi.petshop.member.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import com.litchi.petshop.member.bo.MemberBalanceBo;
+import com.litchi.petshop.member.entity.MemberGradeEntity;
 import com.litchi.petshop.member.feign.ServiceFeignService;
+import com.litchi.petshop.member.service.MemberGradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -32,6 +38,9 @@ import javax.validation.Valid;
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberGradeService memberGradeService;
 
     @Autowired
     ServiceFeignService serviceFeignService;
@@ -92,7 +101,8 @@ public class MemberController {
     @RequestMapping("/save")
     //@RequiresPermissions("member:member:save")
     public R save(@RequestBody @Valid MemberEntity member) {
-        memberService.save(member);
+
+        memberService.saveAndGrade(member);
 
         return R.ok();
     }
@@ -104,6 +114,15 @@ public class MemberController {
     //@RequiresPermissions("member:member:update")
     public R update(@RequestBody MemberEntity member) {
         memberService.updateById(member);
+
+        return R.ok();
+    }
+
+    @RequestMapping("/updateBalance")
+    public R updateBalance(@RequestBody MemberBalanceBo bo) {
+//        memberService.updateById(member);
+
+        memberService.charge(bo);
 
         return R.ok();
     }

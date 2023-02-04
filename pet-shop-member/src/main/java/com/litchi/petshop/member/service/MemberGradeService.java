@@ -16,5 +16,7 @@ import java.util.Map;
 public interface MemberGradeService extends IService<MemberGradeEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void updateMemberGradeAndSetMemberGradeId();
 }
 

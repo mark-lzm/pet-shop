@@ -1,8 +1,10 @@
 package com.litchi.petshop.foster.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.litchi.pojo.dto.MemberDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +16,6 @@ import com.litchi.petshop.foster.entity.FosterEntity;
 import com.litchi.petshop.foster.service.FosterService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.common.utils.R;
-
 
 
 /**
@@ -35,10 +36,18 @@ public class FosterController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("foster:foster:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = fosterService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    /**
+     * 列表所有会员
+     */
+    @RequestMapping("/listAllMember")
+    public List<MemberDto> listAllMember() {
+        return fosterService.listAllMember();
     }
 
 
@@ -47,8 +56,8 @@ public class FosterController {
      */
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("foster:foster:info")
-    public R info(@PathVariable("id") Integer id){
-		FosterEntity foster = fosterService.getById(id);
+    public R info(@PathVariable("id") Integer id) {
+        FosterEntity foster = fosterService.getById(id);
 
         return R.ok().put("foster", foster);
     }
@@ -58,10 +67,24 @@ public class FosterController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("foster:foster:save")
-    public R save(@RequestBody FosterEntity foster){
-		fosterService.save(foster);
-
+    public R save(@RequestBody FosterEntity foster) {
+        if (isExistMember(foster)) {
+            return R.error().put("msg", "会员\"" + foster.getMemberName() + "\"已登记，无需重复登记");
+        }
+        fosterService.save(foster);
         return R.ok();
+    }
+
+    /**
+     * 判断添加的foster中，选择的member是否已经存在在Foster表中，存在返回true，反之false
+     *
+     * @param foster
+     * @return
+     */
+    private boolean isExistMember(FosterEntity foster) {
+        List<FosterEntity> fosterEntities = fosterService.list();
+        Set<Integer> ids = fosterEntities.stream().map(FosterEntity::getMemberId).collect(Collectors.toSet());
+        return ids.contains(foster.getMemberId());
     }
 
     /**
@@ -69,10 +92,23 @@ public class FosterController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("foster:foster:update")
-    public R update(@RequestBody FosterEntity foster){
-		fosterService.updateById(foster);
+    public R update(@RequestBody FosterEntity foster) {
+        if (isExistMember(foster)) {
+            return R.error().put("msg", "会员\"" + foster.getMemberName() + "\"已登记，不可重复修改");
+        }
+        fosterService.updateById(foster);
 
         return R.ok();
+    }
+
+    /**
+     * 根据Member进行修改
+     *
+     * @return
+     */
+    @RequestMapping("/updateByMemberId")
+    public void updateByMemberId(@RequestBody MemberDto dto) {
+        fosterService.updateByMemberId(dto);
     }
 
     /**
@@ -80,8 +116,8 @@ public class FosterController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("foster:foster:delete")
-    public R delete(@RequestBody Integer[] ids){
-		fosterService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Integer[] ids) {
+        fosterService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }

@@ -29,5 +29,7 @@ public interface MemberService extends IService<MemberEntity> {
      * 修改会员等级所需积分值，需要重新将会员信息的等级重新设置
      */
     void updateMemberGradeId();
+
+    void updateAndFoster(MemberEntity member);
 }
 

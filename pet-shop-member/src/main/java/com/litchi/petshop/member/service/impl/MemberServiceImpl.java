@@ -4,8 +4,10 @@ import com.litchi.common.utils.PetPageUtils;
 import com.litchi.petshop.member.bo.MemberBalanceBo;
 import com.litchi.petshop.member.dao.MemberGradeDao;
 import com.litchi.petshop.member.entity.MemberGradeEntity;
+import com.litchi.petshop.member.feign.FosterFeignService;
 import com.litchi.petshop.member.service.MemberGradeService;
 import com.litchi.petshop.member.vo.MemberAndGradeVo;
+import com.litchi.pojo.dto.MemberDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     @Autowired
     MemberGradeService memberGradeService;
+
+    @Autowired
+    FosterFeignService fosterFeignService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -87,6 +92,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     /**
      * 保存并且设置会员等级
+     *
      * @param member
      */
     @Transactional
@@ -104,6 +110,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     /**
      * 根据积分设置会员等级
+     *
      * @param member
      */
     @Transactional
@@ -126,6 +133,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
 
     /**
      * 充值
+     *
      * @param bo
      */
     @Transactional
@@ -158,6 +166,16 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
             this.updateGradeIdByPoints(member);
             this.updateById(member);
         }
+    }
+
+    @Transactional
+    @Override
+    public void updateAndFoster(MemberEntity member) {
+        this.updateById(member);
+
+        MemberDto dto = new MemberDto();
+        BeanUtils.copyProperties(member, dto);
+        fosterFeignService.updateByMemberId(dto);
     }
 
 }

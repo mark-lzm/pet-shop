@@ -1,9 +1,10 @@
 package com.litchi.petshop.member.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.litchi.petshop.member.bo.MemberBalanceBo;
+import com.litchi.petshop.member.feign.FosterFeignService;
 import com.litchi.petshop.member.feign.ServiceFeignService;
 import com.litchi.petshop.member.service.MemberGradeService;
 import com.litchi.pojo.dto.MemberDto;
@@ -42,6 +43,9 @@ public class MemberController {
 
     @Autowired
     ServiceFeignService serviceFeignService;
+
+    @Autowired
+    FosterFeignService fosterFeignService;
 
     @Value("${member.user.name}")
     private String name;
@@ -120,8 +124,8 @@ public class MemberController {
     @RequestMapping("/update")
     //@RequiresPermissions("member:member:update")
     public R update(@RequestBody MemberEntity member) {
-        memberService.updateById(member);
-
+        memberService.updateAndFoster(member);
+//        memberService.updateById(member);
         return R.ok();
     }
 
@@ -140,6 +144,26 @@ public class MemberController {
     @RequestMapping("/delete")
     //@RequiresPermissions("member:member:delete")
     public R delete(@RequestBody Integer[] ids) {
+        //feign列举所有member
+        List<MemberDto> memberDtos = fosterFeignService.listAllMember();
+        //所有被关联到的memberId
+        Set<Integer> relatedAllIds = memberDtos.stream().map(MemberDto::getId).collect(Collectors.toSet());
+
+        // 被关联的id
+        List<Integer> relatedIds = new ArrayList<>();
+
+        if (relatedAllIds.size() != 0) {
+            for (Integer id : ids) {
+                if (relatedAllIds.contains(id)) {
+                    //被关联到的id
+                    relatedIds.add(id);
+                }
+            }
+        }
+
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被foster表关联，无法删除");
+        }
         memberService.removeByIds(Arrays.asList(ids));
 
         return R.ok();

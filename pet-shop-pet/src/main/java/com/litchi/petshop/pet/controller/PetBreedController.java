@@ -1,6 +1,7 @@
 package com.litchi.petshop.pet.controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.litchi.petshop.pet.entity.PetEntity;
 import com.litchi.petshop.pet.service.PetService;
@@ -15,7 +16,6 @@ import com.litchi.petshop.pet.entity.PetBreedEntity;
 import com.litchi.petshop.pet.service.PetBreedService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.common.utils.R;
-
 
 
 /**
@@ -39,14 +39,14 @@ public class PetBreedController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("pet:petbreed:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = petBreedService.queryPage(params);
 
         return R.ok().put("page", page);
     }
 
     @RequestMapping("/listBreed")
-    public R listBreed(@RequestParam Map<String, Object> params){
+    public R listBreed(@RequestParam Map<String, Object> params) {
         PageUtils page = petBreedService.queryBreedPage(params);
 
         return R.ok().put("page", page);
@@ -57,8 +57,8 @@ public class PetBreedController {
      */
     @RequestMapping("/info/{breedId}")
     //@RequiresPermissions("pet:petbreed:info")
-    public R info(@PathVariable("breedId") Integer breedId){
-		PetBreedEntity petBreed = petBreedService.getById(breedId);
+    public R info(@PathVariable("breedId") Integer breedId) {
+        PetBreedEntity petBreed = petBreedService.getById(breedId);
 
         return R.ok().put("petBreed", petBreed);
     }
@@ -68,8 +68,8 @@ public class PetBreedController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("pet:petbreed:save")
-    public R save(@RequestBody PetBreedEntity petBreed){
-		petBreedService.save(petBreed);
+    public R save(@RequestBody PetBreedEntity petBreed) {
+        petBreedService.save(petBreed);
 
         return R.ok();
     }
@@ -79,8 +79,8 @@ public class PetBreedController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("pet:petbreed:update")
-    public R update(@RequestBody PetBreedEntity petBreed){
-		petBreedService.updateById(petBreed);
+    public R update(@RequestBody PetBreedEntity petBreed) {
+        petBreedService.updateById(petBreed);
 
         return R.ok();
     }
@@ -90,36 +90,38 @@ public class PetBreedController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("pet:petbreed:delete")
-    public R delete(@RequestBody Integer[] breedIds){
+    public R delete(@RequestBody Integer[] breedIds) {
 
         // 查看毛色是否被pet关联到，被关联到则无法删除
         List<PetEntity> petEntityList = petService.list();
-        //所有被关联到的breedId
-        Set<Integer> relatedAllIds = new HashSet<>();
-        for (PetEntity petEntity : petEntityList) {
-            relatedAllIds.add(petEntity.getBreedId());
-        }
+        //所有有关联到的breedId
+//        Set<Integer> relatedAllIds = new HashSet<>();
+//        for (PetEntity petEntity : petEntityList) {
+//            relatedAllIds.add(petEntity.getBreedId());
+//        }
+        Set<Integer> relatedAllIds = petEntityList.stream().map(PetEntity::getBreedId).collect(Collectors.toSet());
 
-        // 没被关联的colorId
-        List<Integer> resultIds = new ArrayList<>();
-        // 被关联的colorId
+        // 当前要删除的breedIds，没被关联的breedId
+//        List<Integer> resultIds = new ArrayList<>();
+        // 当前要删除的breedIds，被关联的breedId
         List<Integer> relatedIds = new ArrayList<>();
 
         for (Integer breedId : breedIds) {
-            if (!relatedAllIds.contains(breedId)) {
-                resultIds.add(breedId);
-            } else {
+            if (relatedAllIds.contains(breedId)) {
                 //被关联到的breedId
                 relatedIds.add(breedId);
             }
+//            else {
+//                resultIds.add(breedId);
+//            }
         }
 
         if (relatedIds.size() != 0) {
-            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被pet关联，无法删除");
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被pet表关联，无法删除");
         }
-        if (resultIds.size() != 0) {
-            petBreedService.removeByIds(Arrays.asList(breedIds));
-        }
+//        if (resultIds.size() != 0) {
+        petBreedService.removeByIds(Arrays.asList(breedIds));
+//        }
         return R.ok();
     }
 

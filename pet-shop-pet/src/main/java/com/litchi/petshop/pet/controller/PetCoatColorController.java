@@ -1,6 +1,7 @@
 package com.litchi.petshop.pet.controller;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.litchi.petshop.pet.entity.PetEntity;
 import com.litchi.petshop.pet.service.PetService;
@@ -95,32 +96,25 @@ public class PetCoatColorController {
         // 查看毛色是否被pet关联到，被关联到则无法删除
         List<PetEntity> petEntityList = petService.list();
         //所有被关联到的colorId
-        Set<Integer> relatedAllIds = new HashSet<>();
-        for (PetEntity petEntity : petEntityList) {
-            relatedAllIds.add(petEntity.getCoatColorId());
-        }
+        Set<Integer> relatedAllIds = petEntityList.stream().map(PetEntity::getCoatColorId).collect(Collectors.toSet());
+//        Set<Integer> relatedAllIds = new HashSet<>();
+//        for (PetEntity petEntity : petEntityList) {
+//            relatedAllIds.add(petEntity.getCoatColorId());
+//        }
 
-        // 没被关联的colorId
-        List<Integer> resultIds = new ArrayList<>();
         // 被关联的colorId
         List<Integer> relatedIds = new ArrayList<>();
 
         for (Integer coatColorId : coatColorIds) {
-            if (!relatedAllIds.contains(coatColorId)) {
-                resultIds.add(coatColorId);
-            } else {
+            if (relatedAllIds.contains(coatColorId)) {
                 //被关联到的colorId
                 relatedIds.add(coatColorId);
             }
         }
-//        petCoatColorService.removeByIds(Arrays.asList(coatColorIds));
-
         if (relatedIds.size() != 0) {
             return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被pet关联，无法删除");
         }
-        if (resultIds.size() != 0) {
-            petCoatColorService.removeByIds(resultIds);
-        }
+        petCoatColorService.removeByIds(Arrays.asList(coatColorIds));
         return R.ok();
     }
 

@@ -16,5 +16,7 @@ import java.util.Map;
 public interface PetCoatColorService extends IService<PetCoatColorEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils queryColorPage(Map<String, Object> params);
 }
 

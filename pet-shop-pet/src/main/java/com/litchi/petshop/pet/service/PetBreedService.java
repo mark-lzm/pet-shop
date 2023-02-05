@@ -16,5 +16,7 @@ import java.util.Map;
 public interface PetBreedService extends IService<PetBreedEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils queryBreedPage(Map<String, Object> params);
 }
 

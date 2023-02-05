@@ -40,4 +40,13 @@ public class PetBreedServiceImpl extends ServiceImpl<PetBreedDao, PetBreedEntity
         return PetPageUtils.getPageUtils(pageIndex, limit, entities);
     }
 
+    @Override
+    public PageUtils queryBreedPage(Map<String, Object> params) {
+        IPage<PetBreedEntity> page = this.page(
+                new Query<PetBreedEntity>().getPage(params),
+                new QueryWrapper<PetBreedEntity>()
+        );
+        return new PageUtils(page);
+    }
+
 }

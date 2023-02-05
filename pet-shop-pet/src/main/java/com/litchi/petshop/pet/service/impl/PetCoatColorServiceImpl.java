@@ -1,6 +1,7 @@
 package com.litchi.petshop.pet.service.impl;
 
 import com.litchi.common.utils.PetPageUtils;
+import com.litchi.petshop.pet.entity.PetBreedEntity;
 import com.litchi.petshop.pet.entity.PetEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,15 @@ public class PetCoatColorServiceImpl extends ServiceImpl<PetCoatColorDao, PetCoa
         List<PetCoatColorEntity> entities = this.list(wrapper);
 
         return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+    }
+
+    @Override
+    public PageUtils queryColorPage(Map<String, Object> params) {
+        IPage<PetCoatColorEntity> page = this.page(
+                new Query<PetCoatColorEntity>().getPage(params),
+                new QueryWrapper<PetCoatColorEntity>()
+        );
+        return new PageUtils(page);
     }
 
 }

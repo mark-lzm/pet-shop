@@ -17,6 +17,7 @@ import com.litchi.common.utils.Query;
 import com.litchi.petshop.member.dao.MemberGradeDao;
 import com.litchi.petshop.member.entity.MemberGradeEntity;
 import com.litchi.petshop.member.service.MemberGradeService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("memberGradeService")
@@ -35,6 +36,7 @@ public class MemberGradeServiceImpl extends ServiceImpl<MemberGradeDao, MemberGr
         return new PageUtils(page);
     }
 
+    @Transactional
     @Override
     public void updateMemberGradeAndSetMemberGradeId() {
         //修改会员等级所需积分值，需要重新将会员信息的等级重新设置

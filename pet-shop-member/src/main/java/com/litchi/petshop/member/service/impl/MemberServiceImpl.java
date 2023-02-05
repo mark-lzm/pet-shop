@@ -23,6 +23,7 @@ import com.litchi.common.utils.Query;
 import com.litchi.petshop.member.dao.MemberDao;
 import com.litchi.petshop.member.entity.MemberEntity;
 import com.litchi.petshop.member.service.MemberService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("memberService")
@@ -52,6 +53,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         return new PageUtils(page);
     }
 
+    @Transactional
     @Override
     public PageUtils queryPageAndGrade(Map<String, Object> params) {
 
@@ -87,6 +89,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
      * 保存并且设置会员等级
      * @param member
      */
+    @Transactional
     @Override
     public void saveAndGrade(MemberEntity member) {
         int balance = member.getBalance().intValue();
@@ -103,6 +106,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
      * 根据积分设置会员等级
      * @param member
      */
+    @Transactional
     @Override
     public void updateGradeIdByPoints(MemberEntity member) {
         //根据积分设置会员等级
@@ -124,6 +128,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
      * 充值
      * @param bo
      */
+    @Transactional
     @Override
     public void charge(MemberBalanceBo bo) {
         //根据id获取member
@@ -145,6 +150,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
     /**
      * 修改会员等级所需积分值，需要重新将会员信息的等级重新设置
      */
+    @Transactional
     @Override
     public void updateMemberGradeId() {
         List<MemberEntity> list = this.list();

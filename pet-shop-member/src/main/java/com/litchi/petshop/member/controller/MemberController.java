@@ -1,15 +1,13 @@
 package com.litchi.petshop.member.controller;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.litchi.petshop.member.bo.MemberBalanceBo;
-import com.litchi.petshop.member.entity.MemberGradeEntity;
 import com.litchi.petshop.member.feign.ServiceFeignService;
 import com.litchi.petshop.member.service.MemberGradeService;
+import com.litchi.pojo.dto.MemberDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -93,6 +91,15 @@ public class MemberController {
         MemberEntity member = memberService.getById(id);
 
         return R.ok().put("member", member);
+    }
+
+    @RequestMapping("/memberdto/{id}")
+    //@RequiresPermissions("member:member:info")
+    public MemberDto MemberById(@PathVariable("id") Integer id) {
+        MemberEntity byId = memberService.getById(id);
+        MemberDto dto = new MemberDto();
+        BeanUtils.copyProperties(byId, dto);
+        return dto;
     }
 
     /**

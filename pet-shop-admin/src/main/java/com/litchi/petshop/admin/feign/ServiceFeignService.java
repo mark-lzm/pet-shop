@@ -1,7 +1,7 @@
-package com.litchi.petshop.member.feign;
+package com.litchi.petshop.admin.feign;
 
 import com.litchi.common.utils.R;
-import com.litchi.pojo.member.dto.MemberDto;
+import com.litchi.pojo.service.dto.ServiceDetailDto;
 import com.litchi.pojo.service.dto.ServiceDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @Author Mark
- * 2022/12/25 14:41
+ * 2023/2/18 19:45
  */
 @FeignClient("petshop-service")
 public interface ServiceFeignService {
@@ -20,4 +20,7 @@ public interface ServiceFeignService {
 
     @RequestMapping("/service/service/listAllService")
     public List<ServiceDto> listAllService();
+
+    @RequestMapping("/service/servicedetail/listAllServiceDetail")
+    public List<ServiceDetailDto> listAllServiceDetail();
 }

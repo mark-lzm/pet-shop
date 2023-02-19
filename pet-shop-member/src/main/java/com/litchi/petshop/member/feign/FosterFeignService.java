@@ -1,7 +1,6 @@
 package com.litchi.petshop.member.feign;
 
-import com.litchi.common.utils.R;
-import com.litchi.pojo.dto.MemberDto;
+import com.litchi.pojo.member.dto.MemberDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

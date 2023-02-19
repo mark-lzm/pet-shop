@@ -1,8 +1,11 @@
 package com.litchi.petshop.service.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.litchi.petshop.service.entity.ServiceDetailEntity;
+import com.litchi.petshop.service.service.ServiceDetailService;
+import com.litchi.pojo.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +32,9 @@ import com.litchi.common.utils.R;
 public class ServiceItemSubclassController {
     @Autowired
     private ServiceItemSubclassService serviceItemSubclassService;
+
+    @Autowired
+    private ServiceDetailService serviceDetailService;
 
     /**
      * 列表
@@ -81,6 +87,23 @@ public class ServiceItemSubclassController {
     @RequestMapping("/delete")
     //@RequiresPermissions("service:serviceitemsubclass:delete")
     public R delete(@RequestBody Integer[] serviceItemSubIds){
+        List<ServiceDetailEntity> serviceDetailEntities = serviceDetailService.list();
+        //所有被serviceDetail关联到的memberId
+        Set<Integer> relatedAllIds = serviceDetailEntities.stream().map(ServiceDetailEntity::getServiceItemSubId).collect(Collectors.toSet());
+        // 被关联的id
+        List<Integer> relatedIds = new ArrayList<>();
+        if (relatedAllIds.size() != 0) {
+            for (Integer id : serviceItemSubIds) {
+                if (relatedAllIds.contains(id)) {
+                    //被关联到的id
+                    relatedIds.add(id);
+                }
+            }
+        }
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被serviceDetail表关联，无法删除");
+        }
+
 		serviceItemSubclassService.removeByIds(Arrays.asList(serviceItemSubIds));
 
         return R.ok();

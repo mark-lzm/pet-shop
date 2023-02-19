@@ -16,5 +16,7 @@ import java.util.Map;
 public interface ServiceItemCategoryService extends IService<ServiceItemCategoryEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    PageUtils queryServiceItemPage(Map<String, Object> params);
 }
 

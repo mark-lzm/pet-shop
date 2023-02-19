@@ -1,8 +1,10 @@
 package com.litchi.petshop.service.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.litchi.petshop.service.entity.ServiceItemSubclassEntity;
+import com.litchi.petshop.service.service.ServiceItemSubclassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,9 @@ import com.litchi.common.utils.R;
 public class ServiceItemCategoryController {
     @Autowired
     private ServiceItemCategoryService serviceItemCategoryService;
+
+    @Autowired
+    private ServiceItemSubclassService serviceItemSubclassService;
 
     /**
      * 列表
@@ -81,9 +86,31 @@ public class ServiceItemCategoryController {
     @RequestMapping("/delete")
     //@RequiresPermissions("service:serviceitemcategory:delete")
     public R delete(@RequestBody Integer[] serviceItemIds){
-		serviceItemCategoryService.removeByIds(Arrays.asList(serviceItemIds));
+        // 判断是否被服务子类关联
+        List<ServiceItemSubclassEntity> serviceItemSubclassEntities = serviceItemSubclassService.list();
+        Set<Integer> relatedAllIds = serviceItemSubclassEntities.stream().map(ServiceItemSubclassEntity::getServiceItemId).collect(Collectors.toSet());
+        List<Integer> relatedIds = new ArrayList<>();
+        if (relatedAllIds.size() != 0) {
+            for (Integer id : serviceItemIds) {
+                if (relatedAllIds.contains(id)) {
+                    //被关联到的id
+                    relatedIds.add(id);
+                }
+            }
+        }
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被serviceItemSubclass表关联，无法删除");
+        }
+
+        serviceItemCategoryService.removeByIds(Arrays.asList(serviceItemIds));
 
         return R.ok();
     }
 
+    @RequestMapping("/listServiceItem")
+    public R listServiceItem(@RequestParam Map<String, Object> params) {
+        PageUtils page = serviceItemCategoryService.queryServiceItemPage(params);
+
+        return R.ok().put("page", page);
+    }
 }

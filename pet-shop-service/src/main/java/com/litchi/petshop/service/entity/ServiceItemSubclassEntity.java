@@ -40,6 +40,6 @@ public class ServiceItemSubclassEntity implements Serializable {
 	/**
 	 * 服务项目标记
 	 */
-	private String serviceItemTag;
+	private Integer serviceItemTag;
 
 }

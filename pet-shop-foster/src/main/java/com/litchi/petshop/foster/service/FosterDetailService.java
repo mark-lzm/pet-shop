@@ -2,7 +2,9 @@ package com.litchi.petshop.foster.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.litchi.common.utils.PageUtils;
+import com.litchi.petshop.foster.bo.FosterDetailBo;
 import com.litchi.petshop.foster.entity.FosterDetailEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -16,5 +18,8 @@ import java.util.Map;
 public interface FosterDetailService extends IService<FosterDetailEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    @Transactional
+    Map<String ,String> updateFosterDetailBo(FosterDetailBo bo);
 }
 

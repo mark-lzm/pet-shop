@@ -1,11 +1,13 @@
 package com.litchi.petshop.member.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.litchi.petshop.member.entity.MemberEntity;
 import com.litchi.petshop.member.service.MemberService;
+import com.litchi.pojo.member.dto.MemberDto;
+import com.litchi.pojo.member.dto.MemberGradeDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,11 +51,18 @@ public class MemberGradeController {
      * 信息
      */
     @RequestMapping("/info/{gradeId}")
-    //@RequiresPermissions("member:membergrade:info")
     public R info(@PathVariable("gradeId") Integer gradeId) {
         MemberGradeEntity memberGrade = memberGradeService.getById(gradeId);
 
         return R.ok().put("memberGrade", memberGrade);
+    }
+
+    @RequestMapping("/memberGradeDto/{id}")
+    public MemberGradeDto memberGradeDtoById(@PathVariable("id") Integer id) {
+        MemberGradeEntity byId = memberGradeService.getById(id);
+        MemberGradeDto dto = new MemberGradeDto();
+        BeanUtils.copyProperties(byId, dto);
+        return dto;
     }
 
     /**
@@ -86,9 +95,19 @@ public class MemberGradeController {
     @RequestMapping("/delete")
     //@RequiresPermissions("member:membergrade:delete")
     public R delete(@RequestBody Integer[] gradeIds) {
+        List<MemberEntity> memberEntities = memberService.list();
+        Set<Integer> relatedAllIds = memberEntities.stream().map(MemberEntity::getGradeId).collect(Collectors.toSet());
+        List<Integer> relatedIds = new ArrayList<>();
+        for (Integer id : gradeIds) {
+            if (relatedAllIds.contains(id)) {
+                //要删除的ids中，被关联到的id
+                relatedIds.add(id);
+            }
+        }
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被member表关联，无法删除");
+        }
         memberGradeService.removeByIds(Arrays.asList(gradeIds));
-        // 修改会员等级所需积分值，需要重新将会员信息的等级重新设置
-        memberService.updateMemberGradeId();
         return R.ok();
     }
 

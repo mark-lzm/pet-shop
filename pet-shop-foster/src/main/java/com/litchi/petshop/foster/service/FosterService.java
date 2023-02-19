@@ -3,7 +3,7 @@ package com.litchi.petshop.foster.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.petshop.foster.entity.FosterEntity;
-import com.litchi.pojo.dto.MemberDto;
+import com.litchi.pojo.member.dto.MemberDto;
 
 import java.util.List;
 import java.util.Map;

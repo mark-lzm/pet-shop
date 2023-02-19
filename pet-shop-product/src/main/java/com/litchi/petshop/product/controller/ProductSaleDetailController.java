@@ -1,8 +1,11 @@
 package com.litchi.petshop.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.litchi.pojo.member.dto.MemberDto;
+import com.litchi.pojo.product.dto.ProductSaleDetailDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +42,11 @@ public class ProductSaleDetailController {
         PageUtils page = productSaleDetailService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/listAllProductSaleDetail")
+    public List<ProductSaleDetailDto> listAllProductSaleDetail() {
+        return productSaleDetailService.listAllProductSaleDetail();
     }
 
 

@@ -1,10 +1,15 @@
 package com.litchi.petshop.service.controller;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.litchi.petshop.service.bo.ServiceBo;
+import com.litchi.petshop.service.entity.ServiceDetailEntity;
+import com.litchi.petshop.service.service.ServiceDetailService;
+import com.litchi.petshop.service.vo.ServiceVo;
+import com.litchi.pojo.member.dto.MemberDto;
+import com.litchi.pojo.service.dto.ServiceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +36,9 @@ public class ServiceController {
     @Autowired
     private ServiceService serviceService;
 
+    @Autowired
+    private ServiceDetailService serviceDetailService;
+
     @RequestMapping("/member/{memberId}")
     public R memberService(@PathVariable Integer memberId) {
         List<ServiceEntity> services = serviceService.list(new QueryWrapper<ServiceEntity>().eq("member_id", memberId));
@@ -48,6 +56,16 @@ public class ServiceController {
         PageUtils page = serviceService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/listSelect")
+    public List<ServiceVo> listSelect() {
+        return serviceService.listSelect();
+    }
+
+    @RequestMapping("/listAllService")
+    public List<ServiceDto> listAllService(){
+        return serviceService.listAllService();
     }
 
 
@@ -84,14 +102,50 @@ public class ServiceController {
         return R.ok();
     }
 
+    @RequestMapping("/updatePrice")
+    public R updatePrice(@RequestBody ServiceBo bo) {
+        serviceService.updatePrice(bo);
+        return R.ok();
+    }
+
     /**
      * 删除
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("service:service:delete")
     public R delete(@RequestBody Integer[] ids) {
+
+        // 查看服务详情表所有被service表关联到，被关联到则无法删除
+        List<ServiceDetailEntity> serviceDetailEntities = serviceDetailService.list();
+
+        //所有关联到的serviceId
+        Set<Integer> relatedAllIds = serviceDetailEntities.stream().map(ServiceDetailEntity::getServiceId).collect(Collectors.toSet());
+
+        // 要删除的ids中，被关联的serviceId
+        List<Integer> relatedIds = new ArrayList<>();
+
+        for (Integer id : ids) {
+            if (relatedAllIds.contains(id)) {
+                //要删除的ids中，被关联到的id
+                relatedIds.add(id);
+            }
+        }
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被serviceDetail表关联，无法删除");
+        }
+
         serviceService.removeByIds(Arrays.asList(ids));
 
+        return R.ok();
+    }
+
+    @RequestMapping("/pay")
+    public R pay(@RequestBody ServiceBo bo) {
+        Map<String, String> map = serviceService.pay(bo);
+        String message = map.get("message");
+        if (message != null) {
+            return R.error(message);
+        }
         return R.ok();
     }
 

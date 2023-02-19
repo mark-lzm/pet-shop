@@ -5,9 +5,12 @@ import java.util.stream.Collectors;
 
 import com.litchi.petshop.member.bo.MemberBalanceBo;
 import com.litchi.petshop.member.feign.FosterFeignService;
+import com.litchi.petshop.member.feign.PetFeignService;
 import com.litchi.petshop.member.feign.ServiceFeignService;
 import com.litchi.petshop.member.service.MemberGradeService;
-import com.litchi.pojo.dto.MemberDto;
+import com.litchi.pojo.member.dto.MemberDto;
+import com.litchi.pojo.pet.dto.PetDto;
+import com.litchi.pojo.service.dto.ServiceDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +49,9 @@ public class MemberController {
 
     @Autowired
     FosterFeignService fosterFeignService;
+
+    @Autowired
+    PetFeignService petFeignService;
 
     @Value("${member.user.name}")
     private String name;
@@ -98,8 +104,7 @@ public class MemberController {
     }
 
     @RequestMapping("/memberdto/{id}")
-    //@RequiresPermissions("member:member:info")
-    public MemberDto MemberById(@PathVariable("id") Integer id) {
+    public MemberDto memberById(@PathVariable("id") Integer id) {
         MemberEntity byId = memberService.getById(id);
         MemberDto dto = new MemberDto();
         BeanUtils.copyProperties(byId, dto);
@@ -129,6 +134,20 @@ public class MemberController {
         return R.ok();
     }
 
+    @RequestMapping("/updateMemberDto")
+    public void updateMemberDto(@RequestBody MemberDto memberDto) {
+        MemberEntity member = new MemberEntity();
+        BeanUtils.copyProperties(memberDto, member);
+        memberService.updateById(member);
+    }
+
+
+    /**
+     * 充值
+     *
+     * @param bo
+     * @return
+     */
     @RequestMapping("/updateBalance")
     public R updateBalance(@RequestBody MemberBalanceBo bo) {
 //        memberService.updateById(member);
@@ -144,29 +163,82 @@ public class MemberController {
     @RequestMapping("/delete")
     //@RequiresPermissions("member:member:delete")
     public R delete(@RequestBody Integer[] ids) {
+        // 被foster、pet、service、productsale四表关联，要删除，需要判断联表数据
+
+        /**
+         * foster
+         */
         //feign列举所有member
         List<MemberDto> memberDtos = fosterFeignService.listAllMember();
-        //所有被关联到的memberId
-        Set<Integer> relatedAllIds = memberDtos.stream().map(MemberDto::getId).collect(Collectors.toSet());
-
+        //所有被foster关联到的memberId
+        Set<Integer> relatedAllIdsOfFoster = memberDtos.stream().map(MemberDto::getId).collect(Collectors.toSet());
         // 被关联的id
-        List<Integer> relatedIds = new ArrayList<>();
-
-        if (relatedAllIds.size() != 0) {
+        List<Integer> relatedIdsOfFoster = new ArrayList<>();
+        if (relatedAllIdsOfFoster.size() != 0) {
             for (Integer id : ids) {
-                if (relatedAllIds.contains(id)) {
+                if (relatedAllIdsOfFoster.contains(id)) {
                     //被关联到的id
-                    relatedIds.add(id);
+                    relatedIdsOfFoster.add(id);
                 }
             }
         }
-
-        if (relatedIds.size() != 0) {
-            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被foster表关联，无法删除");
+        if (relatedIdsOfFoster.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIdsOfFoster.toArray()) + "被foster表关联，无法删除");
         }
+
+        /**
+         * service
+         */
+        List<ServiceDto> serviceDtos = serviceFeignService.listAllService();
+        //所有被service关联到的memberId
+        Set<Integer> relatedAllIdsOfService = serviceDtos.stream().map(ServiceDto::getMemberId).collect(Collectors.toSet());
+        // 被关联的id
+        List<Integer> relatedIdsOfService = new ArrayList<>();
+        if (relatedAllIdsOfService.size() != 0) {
+            for (Integer id : ids) {
+                if (relatedAllIdsOfService.contains(id)) {
+                    //被关联到的id
+                    relatedIdsOfService.add(id);
+                }
+            }
+        }
+        if (relatedIdsOfService.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIdsOfService.toArray()) + "被service表关联，无法删除");
+        }
+
+        /**
+         * pet
+         */
+        List<PetDto> petDtos = petFeignService.listAlPet();
+        //所有被pet关联到的memberId
+        Set<Integer> relatedAllIdsOfPet = petDtos.stream().map(PetDto::getMemberId).collect(Collectors.toSet());
+        // 被关联的id
+        List<Integer> relatedIdsOfPet = new ArrayList<>();
+        if (relatedAllIdsOfPet.size() != 0) {
+            for (Integer id : ids) {
+                if (relatedAllIdsOfPet.contains(id)) {
+                    //被关联到的id
+                    relatedIdsOfPet.add(id);
+                }
+            }
+        }
+        if (relatedIdsOfPet.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIdsOfPet.toArray()) + "被pet表关联，无法删除");
+        }
+
         memberService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    /**
+     * 根据积分设置会员等级
+     */
+    @RequestMapping("/updateGradeIdByPoints")
+    public void updateGradeIdByPoints(@RequestBody MemberDto memberDto) {
+        MemberEntity member = new MemberEntity();
+        BeanUtils.copyProperties(memberDto, member);
+        memberService.updateGradeIdByPoints(member);
     }
 
 }

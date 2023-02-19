@@ -1,6 +1,8 @@
 package com.litchi.petshop.foster.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.litchi.common.utils.PetPageUtils;
+import com.litchi.petshop.foster.entity.FosterEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,9 @@ public class FosterStandardServiceImpl extends ServiceImpl<FosterStandardDao, Fo
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        String key = (String) params.get("key");
-        Integer pageIndex = Integer.parseInt((String) params.get("page"));
-        Integer limit = Integer.parseInt((String) params.get("limit"));
-
         QueryWrapper<FosterStandardEntity> wrapper = new QueryWrapper<>();
+
+        String key = (String) params.get("key");
         //key检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {
@@ -35,8 +35,16 @@ public class FosterStandardServiceImpl extends ServiceImpl<FosterStandardDao, Fo
         }
 
         List<FosterStandardEntity> entities = this.list(wrapper);
+        if (params.get("page") != null && params.get("limit") != null) {
+            Integer pageIndex = Integer.parseInt((String) params.get("page"));
+            Integer limit = Integer.parseInt((String) params.get("limit"));
+            return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        }
+        Page<FosterStandardEntity> page = new Page<>();
+        page.setRecords(entities);
+        page.setTotal(entities.size());
 
-        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        return new PageUtils(page);
     }
 
 }

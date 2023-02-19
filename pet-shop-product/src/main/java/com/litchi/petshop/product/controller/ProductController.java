@@ -1,8 +1,11 @@
 package com.litchi.petshop.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.litchi.petshop.product.bo.ProductBo;
+import com.litchi.petshop.product.vo.ProductVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +17,6 @@ import com.litchi.petshop.product.entity.ProductEntity;
 import com.litchi.petshop.product.service.ProductService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.common.utils.R;
-
 
 
 /**
@@ -35,7 +37,7 @@ public class ProductController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("product:product:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = productService.queryPage(params);
 
         return R.ok().put("page", page);
@@ -45,11 +47,15 @@ public class ProductController {
      * 列表
      */
     @RequestMapping("/listAndCategory")
-    //@RequiresPermissions("product:product:list")
-    public R listForCategory(@RequestParam Map<String, Object> params){
+    public R listForCategory(@RequestParam Map<String, Object> params) {
         PageUtils page = productService.queryPageAndCategory(params);
 
         return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/listSelectProduct")
+    public List<ProductEntity> listSelectProduct() {
+        return productService.listSelectProduct();
     }
 
 
@@ -58,8 +64,8 @@ public class ProductController {
      */
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("product:product:info")
-    public R info(@PathVariable("id") Integer id){
-		ProductEntity product = productService.getById(id);
+    public R info(@PathVariable("id") Integer id) {
+        ProductEntity product = productService.getById(id);
 
         return R.ok().put("product", product);
     }
@@ -69,8 +75,8 @@ public class ProductController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:product:save")
-    public R save(@RequestBody ProductEntity product){
-		productService.save(product);
+    public R save(@RequestBody ProductEntity product) {
+        productService.save(product);
 
         return R.ok();
     }
@@ -80,8 +86,8 @@ public class ProductController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:product:update")
-    public R update(@RequestBody ProductEntity product){
-		productService.updateById(product);
+    public R update(@RequestBody ProductEntity product) {
+        productService.updateById(product);
 
         return R.ok();
     }
@@ -91,10 +97,21 @@ public class ProductController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("product:product:delete")
-    public R delete(@RequestBody Integer[] ids){
-		productService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Integer[] ids) {
+        productService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
+    }
+
+    @RequestMapping("/setStock")
+    public R setStock(@RequestBody ProductBo bo) {
+        boolean flag = productService.setStock(bo);
+        if (flag) {
+            return R.ok();
+        } else {
+            ProductEntity product = productService.getById(bo.getProductId());
+            return R.error(product.getName() + "商品库存不足，库存仅剩" + product.getStock() + "份");
+        }
     }
 
 }

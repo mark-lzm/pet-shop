@@ -3,7 +3,9 @@ package com.litchi.petshop.service.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.petshop.service.entity.ServiceDetailEntity;
+import com.litchi.pojo.service.dto.ServiceDetailDto;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,11 @@ import java.util.Map;
 public interface ServiceDetailService extends IService<ServiceDetailEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    boolean isServiceEnd(Integer serviceId);
+
+    boolean existServiceDetail(Integer serviceId);
+
+    List<ServiceDetailDto> listAllServiceDetail();
 }
 

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.math.BigDecimal;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 /**
@@ -48,10 +50,12 @@ public class ServiceDetailEntity implements Serializable {
 	/**
 	 * 服务开始时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date serviceStartTime;
 	/**
 	 * 服务结束时间
 	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	private Date serviceEndTime;
 	/**
 	 * 备注

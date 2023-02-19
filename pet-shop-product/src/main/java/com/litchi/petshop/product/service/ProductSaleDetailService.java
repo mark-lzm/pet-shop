@@ -3,7 +3,9 @@ package com.litchi.petshop.product.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.petshop.product.entity.ProductSaleDetailEntity;
+import com.litchi.pojo.product.dto.ProductSaleDetailDto;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,5 +18,7 @@ import java.util.Map;
 public interface ProductSaleDetailService extends IService<ProductSaleDetailEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    List<ProductSaleDetailDto> listAllProductSaleDetail();
 }
 

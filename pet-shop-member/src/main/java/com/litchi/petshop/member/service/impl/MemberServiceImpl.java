@@ -7,7 +7,7 @@ import com.litchi.petshop.member.entity.MemberGradeEntity;
 import com.litchi.petshop.member.feign.FosterFeignService;
 import com.litchi.petshop.member.service.MemberGradeService;
 import com.litchi.petshop.member.vo.MemberAndGradeVo;
-import com.litchi.pojo.dto.MemberDto;
+import com.litchi.pojo.member.dto.MemberDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +128,8 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         //利用skip获取集合中最后一个
         Optional<MemberGradeEntity> memberGradeEntity = collect.stream().skip(collect.size() - 1).collect(Collectors.toList()).stream().findFirst();
         member.setGradeId(memberGradeEntity.get().getGradeId());
+        //保存
+        this.updateById(member);
     }
 
 

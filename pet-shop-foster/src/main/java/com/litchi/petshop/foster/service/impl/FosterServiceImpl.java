@@ -1,8 +1,7 @@
 package com.litchi.petshop.foster.service.impl;
 
 import com.litchi.common.utils.PetPageUtils;
-import com.litchi.petshop.foster.entity.FosterStandardEntity;
-import com.litchi.pojo.dto.MemberDto;
+import com.litchi.pojo.member.dto.MemberDto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +26,9 @@ public class FosterServiceImpl extends ServiceImpl<FosterDao, FosterEntity> impl
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        String key = (String) params.get("key");
-        Integer pageIndex = Integer.parseInt((String) params.get("page"));
-        Integer limit = Integer.parseInt((String) params.get("limit"));
-
         QueryWrapper<FosterEntity> wrapper = new QueryWrapper<>();
+
+        String key = (String) params.get("key");
         //key检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {
@@ -41,7 +38,17 @@ public class FosterServiceImpl extends ServiceImpl<FosterDao, FosterEntity> impl
 
         List<FosterEntity> entities = this.list(wrapper);
 
-        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        if (params.get("page") != null && params.get("limit") != null) {
+            Integer pageIndex = Integer.parseInt((String) params.get("page"));
+            Integer limit = Integer.parseInt((String) params.get("limit"));
+            return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        }
+
+        IPage<FosterEntity> page = this.page(
+                new Query<FosterEntity>().getPage(params),
+                new QueryWrapper<FosterEntity>()
+        );
+        return new PageUtils(page);
     }
 
     @Transactional

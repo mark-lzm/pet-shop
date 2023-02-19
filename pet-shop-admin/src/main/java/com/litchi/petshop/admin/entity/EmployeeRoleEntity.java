@@ -37,6 +37,10 @@ public class EmployeeRoleEntity implements Serializable {
 	 */
 	private Integer memberInfoSetting;
 	/**
+	 * 宠物信息设置，1为有权限，0为无权限
+	 */
+	private Integer petInfoSetting;
+	/**
 	 * 宠物服务项目设置，1为有权限，0为无权限
 	 */
 	private Integer petServiceItemSetting;

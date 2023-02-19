@@ -39,4 +39,13 @@ public class ServiceItemCategoryServiceImpl extends ServiceImpl<ServiceItemCateg
         return PetPageUtils.getPageUtils(pageIndex, limit, entities);
     }
 
+    @Override
+    public PageUtils queryServiceItemPage(Map<String, Object> params) {
+        IPage<ServiceItemCategoryEntity> page = this.page(
+                new Query<ServiceItemCategoryEntity>().getPage(params),
+                new QueryWrapper<ServiceItemCategoryEntity>()
+        );
+        return new PageUtils(page);
+    }
+
 }

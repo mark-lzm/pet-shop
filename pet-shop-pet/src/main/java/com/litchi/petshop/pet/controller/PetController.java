@@ -1,8 +1,11 @@
 package com.litchi.petshop.pet.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.litchi.pojo.pet.dto.PetDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +17,6 @@ import com.litchi.petshop.pet.entity.PetEntity;
 import com.litchi.petshop.pet.service.PetService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.common.utils.R;
-
 
 
 /**
@@ -35,10 +37,15 @@ public class PetController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("pet:pet:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = petService.queryPage(params);
 
         return R.ok().put("page", page);
+    }
+
+    @RequestMapping("/listAllPet")
+    public List<PetDto> listAlPet(){
+        return petService.listAlPet();
     }
 
 
@@ -47,8 +54,8 @@ public class PetController {
      */
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("pet:pet:info")
-    public R info(@PathVariable("id") Integer id){
-		PetEntity pet = petService.getById(id);
+    public R info(@PathVariable("id") Integer id) {
+        PetEntity pet = petService.getById(id);
 
         return R.ok().put("pet", pet);
     }
@@ -58,8 +65,8 @@ public class PetController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("pet:pet:save")
-    public R save(@RequestBody PetEntity pet){
-		petService.save(pet);
+    public R save(@RequestBody PetEntity pet) {
+        petService.save(pet);
 
         return R.ok();
     }
@@ -69,8 +76,8 @@ public class PetController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("pet:pet:update")
-    public R update(@RequestBody PetEntity pet){
-		petService.updateById(pet);
+    public R update(@RequestBody PetEntity pet) {
+        petService.updateById(pet);
 
         return R.ok();
     }
@@ -80,10 +87,26 @@ public class PetController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("pet:pet:delete")
-    public R delete(@RequestBody Integer[] ids){
-		petService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Integer[] ids) {
+        petService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }
 
+    /**
+     * 信息
+     */
+    @RequestMapping("/petByMember")
+    public R petByMember(Integer memberId) {
+        List<PetEntity> pets = petService.petByMember(memberId);
+        return R.ok().put("pets", pets);
+    }
+
+    @RequestMapping("/selectByPetId/{id}")
+    public PetDto selectByPetId(@PathVariable("id") Integer id) {
+        PetEntity pet = petService.getById(id);
+        PetDto petDto = new PetDto();
+        BeanUtils.copyProperties(pet, petDto);
+        return petDto;
+    }
 }

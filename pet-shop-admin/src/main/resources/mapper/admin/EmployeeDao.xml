@@ -13,6 +13,9 @@
         <result property="idCard" column="id_card"/>
         <result property="status" column="status"/>
     </resultMap>
+    <select id="queryByUserName" resultType="com.litchi.petshop.admin.entity.EmployeeEntity">
+        select * from sys_employee where username = #{username}
+    </select>
 
 
 </mapper>

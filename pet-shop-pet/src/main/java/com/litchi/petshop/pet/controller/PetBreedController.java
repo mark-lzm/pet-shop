@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import com.litchi.petshop.pet.entity.PetEntity;
 import com.litchi.petshop.pet.service.PetService;
+import com.litchi.pojo.pet.dto.PetBreedDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -123,6 +125,19 @@ public class PetBreedController {
         petBreedService.removeByIds(Arrays.asList(breedIds));
 //        }
         return R.ok();
+    }
+
+
+    /**
+     * 根据breedId获取对象
+     */
+    @RequestMapping("/selectByBreedId/{breedId}")
+    public PetBreedDto selectByBreedId(@PathVariable("breedId") Integer breedId) {
+
+        PetBreedEntity petBreed = petBreedService.getById(breedId);
+        PetBreedDto petBreedDto = new PetBreedDto();
+        BeanUtils.copyProperties(petBreed,petBreedDto);
+        return petBreedDto;
     }
 
 }

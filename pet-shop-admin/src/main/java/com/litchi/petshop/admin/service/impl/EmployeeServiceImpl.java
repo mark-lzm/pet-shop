@@ -1,5 +1,6 @@
 package com.litchi.petshop.admin.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.litchi.common.utils.PetPageUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeDao, EmployeeEntity
         List<EmployeeEntity> employeeEntityList = new ArrayList<>();
 
         String key = (String) params.get("key");
-        Integer pageIndex = Integer.parseInt((String) params.get("page"));
-        Integer limit = Integer.parseInt((String) params.get("limit"));
 
         QueryWrapper<EmployeeEntity> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(key)) {
@@ -38,7 +37,20 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeDao, EmployeeEntity
         }
         List<EmployeeEntity> entities = this.list(wrapper);
 
-        return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        if (params.get("page") != null && params.get("limit") != null) {
+            Integer pageIndex = Integer.parseInt((String) params.get("page"));
+            Integer limit = Integer.parseInt((String) params.get("limit"));
+            return PetPageUtils.getPageUtils(pageIndex, limit, entities);
+        }
+        Page<EmployeeEntity> page = new Page<>();
+        page.setRecords(entities);
+        page.setTotal(entities.size());
+        return new PageUtils(page);
+    }
+
+    @Override
+    public EmployeeEntity queryByUserName(String username) {
+        return baseMapper.queryByUserName(username);
     }
 
 }

@@ -3,8 +3,10 @@ package com.litchi.petshop.foster.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.litchi.pojo.dto.MemberDto;
-import org.springframework.beans.BeanUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.litchi.petshop.foster.entity.FosterDetailEntity;
+import com.litchi.petshop.foster.service.FosterDetailService;
+import com.litchi.pojo.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +32,9 @@ import com.litchi.common.utils.R;
 public class FosterController {
     @Autowired
     private FosterService fosterService;
+
+    @Autowired
+    private FosterDetailService fosterDetailService;
 
     /**
      * 列表
@@ -117,6 +122,26 @@ public class FosterController {
     @RequestMapping("/delete")
     //@RequiresPermissions("foster:foster:delete")
     public R delete(@RequestBody Integer[] ids) {
+        // 检查当前要删除的寄养人，是否被其他地方引用
+
+        // 查看寄养详情表所有被foster关联到，被关联到则无法删除
+        List<FosterDetailEntity> fosterDetailEntities = fosterDetailService.list();
+
+        //所有关联到的fosterId
+        Set<Integer> relatedAllIds = fosterDetailEntities.stream().map(FosterDetailEntity::getFosterId).collect(Collectors.toSet());
+
+        // 要删除的ids中，被关联的fosterId
+        List<Integer> relatedIds = new ArrayList<>();
+
+        for (Integer id : ids) {
+            if (relatedAllIds.contains(id)) {
+                //要删除的ids中，被关联到的id
+                relatedIds.add(id);
+            }
+        }
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被fosterDetail表关联，无法删除");
+        }
         fosterService.removeByIds(Arrays.asList(ids));
 
         return R.ok();

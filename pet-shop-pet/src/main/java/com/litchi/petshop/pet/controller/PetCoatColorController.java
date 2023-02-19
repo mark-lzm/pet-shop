@@ -3,8 +3,11 @@ package com.litchi.petshop.pet.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.litchi.petshop.pet.entity.PetBreedEntity;
 import com.litchi.petshop.pet.entity.PetEntity;
 import com.litchi.petshop.pet.service.PetService;
+import com.litchi.pojo.pet.dto.PetCoatColorDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,7 +105,7 @@ public class PetCoatColorController {
 //            relatedAllIds.add(petEntity.getCoatColorId());
 //        }
 
-        // 被关联的colorId
+        // 要删除的ids中，被关联的colorId
         List<Integer> relatedIds = new ArrayList<>();
 
         for (Integer coatColorId : coatColorIds) {
@@ -118,4 +121,15 @@ public class PetCoatColorController {
         return R.ok();
     }
 
+
+    /**
+     * 根据coatColorId获取对象
+     */
+    @RequestMapping("/selectByColorId/{coatColorId}")
+    public PetCoatColorDto selectByColorId(@PathVariable("coatColorId") Integer coatColorId) {
+        PetCoatColorEntity petCoatColor = petCoatColorService.getById(coatColorId);
+        PetCoatColorDto petCoatColorDto = new PetCoatColorDto();
+        BeanUtils.copyProperties(petCoatColor, petCoatColorDto);
+        return petCoatColorDto;
+    }
 }

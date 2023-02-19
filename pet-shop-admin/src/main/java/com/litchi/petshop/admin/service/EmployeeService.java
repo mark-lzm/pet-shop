@@ -16,5 +16,7 @@ import java.util.Map;
 public interface EmployeeService extends IService<EmployeeEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    EmployeeEntity queryByUserName(String username);
 }
 

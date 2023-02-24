@@ -46,7 +46,7 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         QueryWrapper<MemberEntity> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(key)) {
             wrapper.and(obj -> {
-                obj.eq("id", key).or().like("name", key);
+                obj.like("name", key);
             });
         }
 

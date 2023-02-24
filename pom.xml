@@ -9,12 +9,13 @@
     <modules>
         <module>pet-shop-common</module>
         <module>pet-shop-gateway</module>
-        <module>pet-shop-auth-server</module>
         <module>pet-shop-admin</module>
         <module>pet-shop-member</module>
         <module>pet-shop-pet</module>
         <module>pet-shop-service</module>
         <module>pet-shop-foster</module>
+        <module>pet-shop-product</module>
+        <module>pet-shop-third-party</module>
         <module>renren-fast</module>
     </modules>
     <name>pet-shop</name>

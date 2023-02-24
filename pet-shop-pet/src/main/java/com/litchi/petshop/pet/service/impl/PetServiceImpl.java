@@ -54,7 +54,8 @@ public class PetServiceImpl extends ServiceImpl<PetDao, PetEntity> implements Pe
         //key检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {
-                obj.eq("id", key).or().eq("member_id", key).or().like("name", key);
+//                obj.eq("id", key).or().eq("member_id", key).or().like("name", key);
+                obj.like("name", key);
             });
         }
 

@@ -1,8 +1,10 @@
 package com.litchi.petshop.product.controller;
 
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.litchi.petshop.product.entity.ProductEntity;
+import com.litchi.petshop.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +31,9 @@ import com.litchi.common.utils.R;
 public class ProductCategoryController {
     @Autowired
     private ProductCategoryService productCategoryService;
+
+    @Autowired
+    private ProductService productService;
 
     /**
      * 列表
@@ -83,8 +88,23 @@ public class ProductCategoryController {
     //@RequiresPermissions("product:productcategory:delete")
     public R delete(@RequestBody Integer[] catIds){
         //1.检查当前要删除的菜单，是否被其他地方引用
-//		productCategoryService.removeByIds(Arrays.asList(catIds));
-		productCategoryService.removeMenuByIds(Arrays.asList(catIds));
+        List<ProductEntity> productEntities = productService.list();
+
+        Set<Integer> relatedAllIds = productEntities.stream().map(ProductEntity::getCatId).collect(Collectors.toSet());
+
+        List<Integer> relatedIds = new ArrayList<>();
+
+        for (Integer id : catIds) {
+            if (relatedAllIds.contains(id)) {
+                //要删除的ids中，被关联到的id
+                relatedIds.add(id);
+            }
+        }
+        if (relatedIds.size() != 0) {
+            return R.error().put("msg", "编号为：" + Arrays.toString(relatedIds.toArray()) + "被product表关联，无法删除");
+        }
+
+        productCategoryService.removeMenuByIds(Arrays.asList(catIds));
 
         return R.ok();
     }

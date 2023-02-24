@@ -48,7 +48,8 @@ public class ServiceServiceImpl extends ServiceImpl<ServiceDao, ServiceEntity> i
         //key检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {
-                obj.eq("id", key).or().eq("member_id", key);
+//                obj.eq("id", key).or().eq("member_id", key);
+                obj.eq("id", key);
             });
         }
 

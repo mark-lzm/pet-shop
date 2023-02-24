@@ -58,7 +58,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductDao, ProductEntity> i
         //key检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {
-                obj.eq("id", key).or().like("name", key);
+//                obj.eq("id", key).or().like("name", key);
+                obj.like("name", key);
             });
         }
         List<ProductEntity> productEntities = this.list(wrapper);

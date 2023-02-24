@@ -32,7 +32,7 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeDao, EmployeeEntity
         QueryWrapper<EmployeeEntity> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(key)) {
             wrapper.and(obj -> {
-                obj.eq("id", key).or().like("username", key);
+                obj.like("username", key);
             });
         }
         List<EmployeeEntity> entities = this.list(wrapper);

@@ -3,6 +3,7 @@ package com.litchi.petshop.foster.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.litchi.common.utils.PageUtils;
 import com.litchi.petshop.foster.entity.FosterEntity;
+import com.litchi.pojo.foster.dto.FosterDto;
 import com.litchi.pojo.member.dto.MemberDto;
 
 import java.util.List;
@@ -22,5 +23,7 @@ public interface FosterService extends IService<FosterEntity> {
     void updateByMemberId(MemberDto dto);
 
     List<MemberDto> listAllMember();
+
+    List<FosterDto> listAllFoster();
 }
 

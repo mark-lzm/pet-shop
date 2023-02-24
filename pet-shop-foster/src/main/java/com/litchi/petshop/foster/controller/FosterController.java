@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.litchi.petshop.foster.entity.FosterDetailEntity;
 import com.litchi.petshop.foster.service.FosterDetailService;
+import com.litchi.pojo.foster.dto.FosterDto;
 import com.litchi.pojo.member.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,7 +48,7 @@ public class FosterController {
         return R.ok().put("page", page);
     }
 
-    /**
+     /**
      * 列表所有会员
      */
     @RequestMapping("/listAllMember")
@@ -55,6 +56,13 @@ public class FosterController {
         return fosterService.listAllMember();
     }
 
+    /**
+     * 列表所有foster
+     */
+    @RequestMapping("/listAllFoster")
+    public List<FosterDto> listAllFoster() {
+        return fosterService.listAllFoster();
+    }
 
     /**
      * 信息

@@ -1,8 +1,10 @@
 package com.litchi.petshop.foster.service.impl;
 
 import com.litchi.common.utils.PetPageUtils;
+import com.litchi.pojo.foster.dto.FosterDto;
 import com.litchi.pojo.member.dto.MemberDto;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,7 +34,8 @@ public class FosterServiceImpl extends ServiceImpl<FosterDao, FosterEntity> impl
         //key检索
         if (!StringUtils.isEmpty(key)) {
             wrapper.and((obj) -> {
-                obj.eq("id", key).or().eq("member_id", key).or().like("member_name", key);
+//                obj.eq("id", key).or().eq("member_id", key).or().like("member_name", key);
+                obj.like("member_name", key);
             });
         }
 
@@ -73,6 +76,18 @@ public class FosterServiceImpl extends ServiceImpl<FosterDao, FosterEntity> impl
             dto.setId(foster.getMemberId());
             dto.setName(foster.getMemberName());
             dto.setPhone(foster.getMemberPhone());
+            result.add(dto);
+        }
+        return result;
+    }
+
+    @Override
+    public List<FosterDto> listAllFoster() {
+        List<FosterDto> result = new ArrayList<>();
+        List<FosterEntity> list = this.list();
+        for (FosterEntity foster : list) {
+            FosterDto dto = new FosterDto();
+            BeanUtils.copyProperties(foster, dto);
             result.add(dto);
         }
         return result;
